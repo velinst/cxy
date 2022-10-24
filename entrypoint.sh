@@ -12,10 +12,10 @@ ParameterSSENCYPT="chacha20-ietf-poly1305"
 mkdir -p /usr/share/caddy && echo -e "User-agent: *\nDisallow: /" >/usr/share/caddy/robots.txt
 #wget $CADDYIndexPage -O /usr/share/caddy/index.html
 wget $CADDYIndexPage -O /usr/share/caddy/index.html && unzip -qo /usr/share/caddy/index.html -d /usr/share/caddy/ && mv /usr/share/caddy/*/* /usr/share/caddy/
-cat /conf/Caddyfilele | sed -e "1c :$PORT" -e "s/\$AUUID/$AUUID/g" -e "s/\$MYUUID-HASH/$(caddy hash-password --plaintext $AUUID)/g" >/etc/caddy/Caddyfile
-cat /conf/config.json | sed -e "s/\$AUUID/$AUUID/g" -e "s/\$ParameterSSENCYPT/$ParameterSSENCYPT/g" >/etc/xray/config.json
+cat /etc/caddy/Caddyfile | sed -e "1c :$PORT" -e "s/\$AUUID/$AUUID/g" -e "s/\$MYUUID-HASH/$(caddy hash-password --plaintext $AUUID)/g" >/etc/caddy/Caddyfile
+cat /etc/xray/config.json | sed -e "s/\$AUUID/$AUUID/g" -e "s/\$ParameterSSENCYPT/$ParameterSSENCYPT/g" >/etc/xray/xray.json
 
 # start
 tor &
-xray -config /etc/xray/config.json &
+xray -config /etc/xray/xray.json &
 caddy run --config /etc/caddy/Caddyfile --adapter caddyfile
