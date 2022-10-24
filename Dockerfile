@@ -14,7 +14,7 @@ COPY entrypoint.sh /entrypoint.sh
 
 RUN set -ex \
 	&& mkdir -p /etc/caddy/ /etc/xray \
-	&& apk add --no-cache ca-certificates tor wget\
+	&& apk add --no-cache ca-certificates tor wget \
 	&& chmod +x /usr/bin/xray \
 	&& chmod +x /usr/bin/caddy \
 	&& chmod +x /entrypoint.sh 
