@@ -8,15 +8,18 @@ RUN git clone --progress https://github.com/XTLS/Xray-core.git . && \
 FROM caddy:2.6.2-builder-alpine AS caddy
 RUN xcaddy build latest
 
+WORKDIR /root
 COPY --from=xray /tmp/xray /usr/bin 
-COPY conf/ /conf/
-COPY entrypoint.sh /entrypoint.sh
+COPY entrypoint.sh /root/entrypoint.sh
 
 RUN set -ex \
 	&& mkdir -p /etc/caddy/ /etc/xray \
 	&& apk add --no-cache ca-certificates tor wget \
 	&& chmod +x /usr/bin/xray \
 	&& chmod +x /usr/bin/caddy \
-	&& chmod +x /entrypoint.sh 
-	
-CMD /entrypoint.sh
+	&& chmod +x /root/entrypoint.sh 
+
+COPY conf/Caddyfile /conf/Caddyfile
+COPY conf/config.json /conf/config.json		
+
+CMD /root/entrypoint.sh
